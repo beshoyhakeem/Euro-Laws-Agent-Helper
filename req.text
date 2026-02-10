@@ -1,2 +1,0 @@
-pip install -U weaviate-client[agents] // for Weaviate
-
