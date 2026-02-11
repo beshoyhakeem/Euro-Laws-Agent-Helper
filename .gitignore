@@ -1,2 +1,4 @@
 dataset/
 eurlex-dataset-embed.zip
+.env
+.env.example

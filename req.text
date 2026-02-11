@@ -2,4 +2,4 @@ weaviate-client[agents]
 tqdm
 numpy
 sentence-transformers
-
+python-dotenv
