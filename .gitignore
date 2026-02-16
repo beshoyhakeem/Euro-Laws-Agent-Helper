@@ -3,5 +3,6 @@ eurlex-dataset-embed.zip
 .env
 .env.example
 __pycache__
-connection\__pycache__
-retrieval\__pycache__
+src\connection\__pycache__
+src\retrieval\__pycache__
+src\__pycache__
