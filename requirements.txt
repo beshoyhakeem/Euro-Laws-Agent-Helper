@@ -1,5 +1,7 @@
 weaviate-client[agents]
 tqdm
 numpy
+pandas
 sentence-transformers
+openai
 python-dotenv
