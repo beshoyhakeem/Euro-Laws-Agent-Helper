@@ -35,14 +35,18 @@ def search_chunks(query_embedding):
     return retrived , celex_ids
 
 
+# Get The Full Docs Using celex_id
 def get_docs_celex(celex_ids):
     docs_list = []
+
+    # to remove the duplicates 
+    celex_ids = list(set(celex_ids))
 
     for celex_id in celex_ids:
         doc = laws[laws['CELEX'] == celex_id]['act_raw_text'].iloc[0]
         docs_list.append(doc)
 
-    return docs_list    
+    return docs_list 
 
 ################ Using LangChain ####################
 
