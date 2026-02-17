@@ -1,38 +1,36 @@
-from src.connection.clinets import *
-
-import weaviate
+from src.connection.clinets import weaviate_client
+from src.sentencetransformers.st_class import SentenceTransformersEmbeddings
+from langchain_weaviate import WeaviateVectorStore
 
 import json
 import pandas as pd
 
 laws = pd.DataFrame
 
+embedding_model = SentenceTransformersEmbeddings('sentence-transformers/all-mpnet-base-v2')
+
 def search_chunks(query_embedding):
-    with weaviate.connect_to_weaviate_cloud(
-    cluster_url=WEAVIATE_URL,
-    auth_credentials=WEAVIATE_API_KEY,
-) as client:
-        
-        # Step 2.2: Use this collection
-        Euro_Laws = client.collections.use("Euro_Laws")
 
-        # Step 2.3: Perform a vector search with NearVector
-        response = Euro_Laws.query.near_vector(
-            near_vector= query_embedding, 
-            limit=5
-        )
+    # Use Euro_Laws collection
+    Euro_Laws = weaviate_client.collections.use("Euro_Laws")
 
-        # Retrive nerest chunks with metadata and put in list 
-        retrived = []
-        for obj in response.objects:
-            retrived.append(json.dumps(obj.properties))
+    # Perform a vector search with NearVector
+    response = Euro_Laws.query.near_vector(
+        near_vector= query_embedding, 
+        limit=5
+    )
 
-        # Get the celex id for nerest chunks
-        celex_ids = []
-        for meta in retrived:
-            key_value = json.loads(meta)
-            celex_ids.append(key_value.get("celex", ""))
 
+    # Retrive nerest chunks with metadata and put in list 
+    retrived = []
+    for obj in response.objects:
+        retrived.append(json.dumps(obj.properties))
+
+    # Get the celex id for nerest chunks
+    celex_ids = []
+    for meta in retrived:
+        key_value = json.loads(meta)
+        celex_ids.append(key_value.get("celex", ""))
 
     return retrived , celex_ids
 
@@ -46,7 +44,27 @@ def get_docs_celex(celex_ids):
 
     return docs_list    
 
+################ Using LangChain ####################
 
+vectorstore = WeaviateVectorStore(
+    client = weaviate_client,
+    index_name = "Euro_Laws",
+    text_key="text",
+    embedding = embedding_model
+)
+
+def lang_search_chunks(user_question):
+    celex_ids = []
+
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+    docs = retriever.invoke(user_question)
+
+    for i in docs:
+        celex_ids.append(docs[i].metadata['celex'])
+
+    celex_ids = list(set(celex_ids))
+
+    return docs , celex_ids 
 
 if __name__ == "__main__":
 

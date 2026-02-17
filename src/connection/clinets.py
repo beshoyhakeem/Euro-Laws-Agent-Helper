@@ -1,4 +1,5 @@
 from openai import AzureOpenAI
+import weaviate
 from dotenv import load_dotenv
 import os
 
@@ -27,4 +28,10 @@ chat_client = AzureOpenAI(
     api_version ="2025-01-01-preview",
     azure_deployment = "gpt-4.1",
     azure_endpoint = AZURE_ENDPOINT
+)
+
+# Weaviate clinets
+weaviate_client = weaviate.connect_to_weaviate_cloud(
+    cluster_url=WEAVIATE_URL,
+    auth_credentials=WEAVIATE_API_KEY,
 )

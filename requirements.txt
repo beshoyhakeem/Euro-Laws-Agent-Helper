@@ -5,3 +5,8 @@ pandas
 sentence-transformers
 openai
 python-dotenv
+langchain
+langchain-core
+langchain-huggingface
+langchain-weaviate
+weaviate-client
