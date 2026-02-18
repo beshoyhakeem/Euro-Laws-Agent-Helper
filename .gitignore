@@ -3,4 +3,5 @@ eurlex-dataset-embed.zip
 .env
 .env.example
 __pycache__/
-*.py[cod]eurlex-laws-cleaned-dataset.zip
+*.py[cod]
+eurlex-laws-cleaned-dataset.zip

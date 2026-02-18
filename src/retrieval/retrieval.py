@@ -5,7 +5,7 @@ from langchain_weaviate import WeaviateVectorStore
 import json
 import pandas as pd
 
-laws = pd.DataFrame
+laws = pd.read_csv('dataset/Celex_act_raw_text.csv')
 
 embedding_model = SentenceTransformersEmbeddings('sentence-transformers/all-mpnet-base-v2')
 
@@ -19,7 +19,6 @@ def search_chunks(query_embedding):
         near_vector= query_embedding, 
         limit=5
     )
-
 
     # Retrive nerest chunks with metadata and put in list 
     retrived = []
@@ -50,12 +49,14 @@ def get_docs_celex(celex_ids):
 
 ################ Using LangChain ####################
 
+# intialize vector store
 vectorstore = WeaviateVectorStore(
     client = weaviate_client,
     index_name = "Euro_Laws",
     text_key="text",
     embedding = embedding_model
 )
+
 
 def lang_search_chunks(user_question):
     celex_ids = []
