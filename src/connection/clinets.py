@@ -1,4 +1,5 @@
 from openai import AzureOpenAI
+from langchain_openai import AzureChatOpenAI
 import weaviate
 from dotenv import load_dotenv
 import os
@@ -28,6 +29,15 @@ chat_client = AzureOpenAI(
     api_version ="2025-01-01-preview",
     azure_deployment = "gpt-4.1",
     azure_endpoint = AZURE_ENDPOINT
+)
+
+# Initialize LangChain Azure OpenAI LLM
+llm = AzureChatOpenAI(
+    azure_deployment="gpt-4.1",
+    api_key=AZURE_API_KEY,
+    azure_endpoint=AZURE_ENDPOINT,
+    api_version="2025-01-01-preview",
+    temperature=0.2,
 )
 
 # Weaviate clinets

@@ -11,7 +11,7 @@ def message_chat(messages):
     
     return  response_text
 
-
+"""
 def message_with_context(user_qusetion):
 
     # check retrived docs, print them undereach other
@@ -23,7 +23,7 @@ def message_with_context(user_qusetion):
         docs_section = "No documents retrieved."
 
 
-    asking_prompt =f"""
+    asking_prompt =f""""""
     Depend on this user question:
     
     {user_qusetion}
@@ -37,7 +37,7 @@ def message_with_context(user_qusetion):
     Answer guide:
     - read the doc well and use only the lines or laws related to user Question
     - if no doc and the user askes about previous chat answer him
-    """
+    """"""
 
     message_history.append({"role": "user", "content": asking_prompt})
 
@@ -47,3 +47,5 @@ def message_with_context(user_qusetion):
 
 
     return display(Markdown(chat_response))
+
+"""

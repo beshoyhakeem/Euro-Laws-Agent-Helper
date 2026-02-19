@@ -9,4 +9,6 @@ langchain
 langchain-core
 langchain-huggingface
 langchain-weaviate
+langchain-openai
+langgraph
 weaviate-client

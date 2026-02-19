@@ -64,8 +64,9 @@ def lang_search_chunks(user_question):
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
     docs = retriever.invoke(user_question)
 
-    for i in docs:
-        celex_ids.append(docs[i].metadata['celex'])
+    for doc in docs:
+        if 'celex' in doc.metadata:
+            celex_ids.append(doc.metadata['celex'])
 
     celex_ids = list(set(celex_ids))
 
