@@ -1,3 +1,5 @@
+from typing import Any
+
 from src.connection.clinets import weaviate_client
 from src.sentencetransformers.st_class import SentenceTransformersEmbeddings
 from langchain_weaviate import WeaviateVectorStore
@@ -65,10 +67,9 @@ def lang_search_chunks(user_question):
     docs = retriever.invoke(user_question)
 
     for doc in docs:
-        if 'celex' in doc.metadata:
-            celex_ids.append(doc.metadata['celex'])
+        celex_ids.append(doc.metadata['celex'])
 
-    celex_ids = list(set(celex_ids))
+    celex_ids = list[Any](set(celex_ids))
 
     return docs , celex_ids 
 
