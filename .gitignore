@@ -5,3 +5,4 @@ eurlex-dataset-embed.zip
 __pycache__/
 *.py[cod]
 eurlex-laws-cleaned-dataset.zip
+.vscode/
