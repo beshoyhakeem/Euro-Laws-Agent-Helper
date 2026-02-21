@@ -76,3 +76,7 @@ def lang_search_chunks(user_question):
 if __name__ == "__main__":
 
     print ("true")
+
+    docr , celex_id = lang_search_chunks("Pooping in Public Places")
+
+    print(celex_id)
