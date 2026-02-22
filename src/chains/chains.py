@@ -75,8 +75,3 @@ if __name__ == "__main__":
     state: AppState = {"question": "hello can i know what is sun"}
     print(classify_question(state))
 
-
-
-
-
-

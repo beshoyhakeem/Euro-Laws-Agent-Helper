@@ -1,13 +1,10 @@
-from src.connection.clinets import weaviate_client
-from src.sentencetransformers.st_class import SentenceTransformersEmbeddings
-from langchain_weaviate import WeaviateVectorStore
-
+from src.core.resources import get_laws, get_vectorstore , weaviate_client
 import json
-import pandas as pd
 
-laws = pd.read_csv('dataset/act_raw_text_with_4meta.csv')
 
-embedding_model = SentenceTransformersEmbeddings('sentence-transformers/all-mpnet-base-v2')
+laws = get_laws()
+vectorstore = get_vectorstore()
+
 
 def search_chunks(query_embedding):
 
@@ -50,13 +47,14 @@ def get_docs_celex(celex_ids):
 ################ Using LangChain ####################
 
 # intialize vector store
+"""
 vectorstore = WeaviateVectorStore(
     client = weaviate_client,
     index_name = "Euro_Laws",
     text_key="text",
     embedding = embedding_model
 )
-
+"""
 
 def search_docs(query):
     celex_ids = []
