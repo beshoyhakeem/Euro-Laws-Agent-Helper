@@ -5,7 +5,7 @@ from langchain_weaviate import WeaviateVectorStore
 import json
 import pandas as pd
 
-laws = pd.read_csv('dataset/Celex_act_raw_text.csv')
+laws = pd.read_csv('dataset/act_raw_text_with_4meta.csv')
 
 embedding_model = SentenceTransformersEmbeddings('sentence-transformers/all-mpnet-base-v2')
 
