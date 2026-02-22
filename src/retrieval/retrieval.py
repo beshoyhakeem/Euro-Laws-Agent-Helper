@@ -1,5 +1,3 @@
-from typing import Any
-
 from src.connection.clinets import weaviate_client
 from src.sentencetransformers.st_class import SentenceTransformersEmbeddings
 from langchain_weaviate import WeaviateVectorStore
@@ -60,23 +58,40 @@ vectorstore = WeaviateVectorStore(
 )
 
 
-def lang_search_chunks(user_question):
+def search_docs(query):
     celex_ids = []
+    full_doc_info = """ """
 
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-    docs = retriever.invoke(user_question)
+    docs = retriever.invoke(query)
 
     for doc in docs:
         celex_ids.append(doc.metadata['celex'])
 
-    celex_ids = list[Any](set(celex_ids))
+    celex_ids = list(set(celex_ids))    
 
-    return docs , celex_ids 
+    for i , celex_id in enumerate(celex_ids):
+
+        full_doc_info += f"""
+
+        doc {i} :
+
+        'celex': {laws[laws['CELEX'] == celex_id]['CELEX'].iloc[0]}
+        'status': {laws[laws['CELEX'] == celex_id]['Status'].iloc[0]}
+        'act_type': {laws[laws['CELEX'] == celex_id]['Act_type'].iloc[0]}
+        'treaty': {laws[laws['CELEX'] == celex_id]['Treaty'].iloc[0]}
+
+        full_doc :
+
+        {laws[laws['CELEX'] == celex_id]['act_raw_text'].iloc[0]}
+{"=="*15} "END OF DOC" {"=="*15}
+        """
+
+    return full_doc_info    
+
+
 
 if __name__ == "__main__":
 
     print ("true")
 
-    docr , celex_id = lang_search_chunks("Pooping in Public Places")
-
-    print(celex_id)
