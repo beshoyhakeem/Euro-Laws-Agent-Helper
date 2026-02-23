@@ -1,14 +1,17 @@
-from src.core.resources import get_laws, get_vectorstore , weaviate_client
+from src.core.resources import get_vectorstore , weaviate_client
+from weaviate.classes.query import Filter
 import json
 
-
-laws = get_laws()
 vectorstore = get_vectorstore()
+
+# To get the full doc form Euro_Law_Documents collection
+eur_docs = weaviate_client.collections.get("Euro_Law_Documents")
 
 
 def search_chunks(query_embedding):
 
     # Use Euro_Laws collection
+
     Euro_Laws = weaviate_client.collections.use("Euro_Laws")
 
     # Perform a vector search with NearVector
@@ -29,33 +32,22 @@ def search_chunks(query_embedding):
         celex_ids.append(key_value.get("celex", ""))
 
     return retrived , celex_ids
+ 
+# to get the full doc with metadata
+def get_full_doc_weaviate(celex_id):
 
+    response = eur_docs.query.fetch_objects(
+    filters=Filter.by_property("celex").equal(celex_id),
+    limit=1
+)
+    r = response.objects[0].properties
 
-# Get The Full Docs Using celex_id
-def get_docs_celex(celex_ids):
-    docs_list = []
-
-    # to remove the duplicates 
-    celex_ids = list(set(celex_ids))
-
-    for celex_id in celex_ids:
-        doc = laws[laws['CELEX'] == celex_id]['act_raw_text'].iloc[0]
-        docs_list.append(doc)
-
-    return docs_list 
+    # r is a dict with key, values for each doc
+    return r    
 
 ################ Using LangChain ####################
 
-# intialize vector store
-"""
-vectorstore = WeaviateVectorStore(
-    client = weaviate_client,
-    index_name = "Euro_Laws",
-    text_key="text",
-    embedding = embedding_model
-)
-"""
-
+# search docs using query to get a string containg all docs with metadata
 def search_docs(query):
     celex_ids = []
     full_doc_info = """ """
@@ -69,19 +61,20 @@ def search_docs(query):
     celex_ids = list(set(celex_ids))    
 
     for i , celex_id in enumerate(celex_ids):
+        f_doc_meta = get_full_doc_weaviate(celex_id)
 
         full_doc_info += f"""
 
         doc {i} :
 
-        'celex': {laws[laws['CELEX'] == celex_id]['CELEX'].iloc[0]}
-        'status': {laws[laws['CELEX'] == celex_id]['Status'].iloc[0]}
-        'act_type': {laws[laws['CELEX'] == celex_id]['Act_type'].iloc[0]}
-        'treaty': {laws[laws['CELEX'] == celex_id]['Treaty'].iloc[0]}
+        'celex': {f_doc_meta['celex']}
+        'status': {f_doc_meta['status']}
+        'act_type': {f_doc_meta['act_type']}
+        'treaty': {f_doc_meta['treaty']}
 
         full_doc :
 
-        {laws[laws['CELEX'] == celex_id]['act_raw_text'].iloc[0]}
+        {f_doc_meta['full_doc']}
 {"=="*15} "END OF DOC" {"=="*15}
         """
 
@@ -92,4 +85,8 @@ def search_docs(query):
 if __name__ == "__main__":
 
     print ("true")
+
+    print(search_docs("Drug dealing Sentences"))
+
+    
 

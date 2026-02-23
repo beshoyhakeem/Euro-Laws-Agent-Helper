@@ -5,7 +5,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 
-from src.connection.clinets import llm
+from src.generation.chat import llm , llm_reason
 from src.prompts.rag_prompts import *
 from src.retrieval.retrieval import search_docs
 
@@ -20,7 +20,7 @@ class AppState(TypedDict, total=False):
 # Chain to Classify User Question
 def classify_question(state: AppState) -> AppState:
 
-    chain = classifier_prompt | llm | StrOutputParser()
+    chain = classifier_prompt | llm_reason | StrOutputParser()
     route_raw: str = chain.invoke({"question": state["question"]}).strip().lower()
 
     # Normalise LLM output to exactly "normal" or "rag"

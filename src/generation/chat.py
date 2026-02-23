@@ -1,4 +1,5 @@
-from src.connection.clinets import chat_client
+from langchain_openai import AzureChatOpenAI
+from src.connection.clinets import AZURE_API_KEY , AZURE_ENDPOINT, chat_client
 
 
 def message_chat(messages):
@@ -49,3 +50,23 @@ def message_with_context(user_qusetion):
     return display(Markdown(chat_response))
 
 """
+
+############################# Using LangChain ##############################
+
+# Initialize LangChain Azure OpenAI LLM
+llm = AzureChatOpenAI(
+    azure_deployment="gpt-4.1",
+    api_key=AZURE_API_KEY,
+    azure_endpoint=AZURE_ENDPOINT,
+    api_version="2025-01-01-preview",
+    temperature=0.2,
+)
+
+# Initialize LangChain Azure OpenAI LLM for reasoning
+llm_reason = AzureChatOpenAI(
+    azure_deployment="chatgpt-4o-latest",
+    api_key=AZURE_API_KEY,
+    azure_endpoint=AZURE_ENDPOINT,
+    api_version="2025-01-01-preview",
+    temperature=0.1,
+)
