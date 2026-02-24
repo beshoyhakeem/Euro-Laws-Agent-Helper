@@ -1,6 +1,5 @@
 from typing import List, Dict, Any, Literal,TypedDict , Optional
 from langchain_core.documents import Document
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
@@ -58,6 +57,10 @@ def retrieve_docs(state: AppState) -> AppState:
 
     query : str = state.get("enhanced_query")
     docs = search_docs(query)
+
+    # For debugging purpuse
+    #print(f"docs :\n {docs}")
+
 
     return {"docs": docs}
 

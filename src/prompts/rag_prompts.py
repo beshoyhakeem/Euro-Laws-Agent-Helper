@@ -18,12 +18,24 @@ Response:"""),
 ######################################## Query enhancement prompt ##################################
 query_enhance_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "You are a query enhancement assistant."),
-        ("human", """Rewrite the user's question to be more effective for document retrieval.
-Make it specific and include relevant legal terms.
+        ("system", """You are a query rebuilder for semantic document retrieval from a vector database.
 
-Original question: {question}
-Enhanced query:"""),
+Your task is to transform the user's question into an optimized retrieval query.
+
+Focus on:
+- Extracting the core legal issues
+- Identifying relevant legal concepts, doctrines, statutes, and terminology
+- Removing conversational or irrelevant language
+- Preserving factual constraints (dates, jurisdictions, parties, contract types, etc.)
+- Expanding implicit legal intent into explicit searchable terms
+
+The output should be concise, keyword-dense, and optimized for vector similarity search.
+Do NOT answer the question.
+Only return the enhanced retrieval query."""),
+        
+        ("human", """Original question: {question}
+
+Rewritten retrieval query:"""),
     ]
 )
 
