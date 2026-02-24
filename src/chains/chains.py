@@ -28,6 +28,9 @@ def classify_question(state: AppState) -> AppState:
         route: Literal["normal", "rag"] = "rag"
     else:
         route = "normal"
+    
+    # For debugging purpuse
+    print(f"route : {route}")
 
     return {"route": route}
 
@@ -44,6 +47,9 @@ def query_enchance(state: AppState) -> AppState:
 
     chain = query_enhance_prompt | llm | StrOutputParser()
     enhaced_query = chain.invoke({"question": state["question"]})
+
+    # For debugging purpuse
+    print(f"enhaced_query : {enhaced_query}")
 
     return {"enhanced_query": enhaced_query }
 
