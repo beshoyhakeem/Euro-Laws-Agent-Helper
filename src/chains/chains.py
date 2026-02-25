@@ -1,20 +1,12 @@
-from typing import List, Dict, Any, Literal,TypedDict , Optional
-from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 
+from src.chains.state import AppState, Literal
 from src.generation.chat import llm , llm_reason
 from src.prompts.rag_prompts import *
 from src.retrieval.retrieval import search_docs
 
-
-class AppState(TypedDict, total=False):
-    question: str
-    enhanced_query: str
-    docs: List[Document]
-    answer: str
-    route: Literal["normal", "rag"]
 
 # Chain to Classify User Question
 def classify_question(state: AppState) -> AppState:
@@ -60,8 +52,7 @@ def retrieve_docs(state: AppState) -> AppState:
 
     # For debugging purpuse
     #print(f"docs :\n {docs}")
-
-
+    
     return {"docs": docs}
 
 # Chain to answer User Question form docs "RAG"

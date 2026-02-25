@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, END
-from src.chains.chains import AppState
+from src.chains.state import AppState
 from src.graph.router import route_selector
 
 from src.chains.chains import  ( classify_question,
