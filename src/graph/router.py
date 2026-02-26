@@ -8,3 +8,6 @@ def route_selector(state: AppState) -> str:
         return "normal"
     elif route == "rag":
         return "rag"
+    elif route == "history":
+        return "history"
+

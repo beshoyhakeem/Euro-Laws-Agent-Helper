@@ -16,9 +16,11 @@ def classify_question(state: AppState) -> AppState:
 
     # Normalise LLM output to exactly "normal" or "rag"
     if "rag" in route_raw:
-        route: Literal["normal", "rag"] = "rag"
+        route: Literal["normal", "rag", "history"] = "rag"
+    elif "history" in route_raw:
+        route: Literal["normal", "rag", "history"] = "history"
     else:
-        route = "normal"
+        route: Literal["normal", "rag", "history"] = "normal"
     
     # For debugging purpuse
     print(f"route : {route}")
@@ -32,6 +34,14 @@ def normal_question(state: AppState) -> AppState:
     normal_que_answer: str = chain.invoke({"question": state["question"]})
 
     return {"answer": normal_que_answer}
+
+# Chain to answer User Question dependinmg on history
+def history_question(state: AppState) -> AppState:
+
+    chain = normal_answer_prompt| llm | StrOutputParser()
+    history_que_answer: str = chain.invoke({"question": state["question"]})
+    return {"answer": history_que_answer}
+
 
 # Chain to enhance User Question for RAG
 def query_enchance(state: AppState) -> AppState:

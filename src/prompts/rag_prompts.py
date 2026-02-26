@@ -4,11 +4,12 @@ from langchain_core.prompts import ChatPromptTemplate
 
 classifier_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "You are a classifier. Determine if the user's question requires retrieving documents from a knowledge base or can be answered directly."),
-        ("human", """Respond with ONLY "normal" or "rag":
+        ("system", "You are a classifier. Determine if the user's question requires retrieving documents from a knowledge base or can be answered directly or from previous conversation or history."),
+        ("human", """Respond with ONLY "normal" or "rag" or "history":
 
 - "normal": General questions, greetings, or questions that don't need document retrieval
 - "rag": Questions about specific laws, regulations, or information that requires document search
+- "history": Questions that require referencing previous conversation history
 
 Question: {question}
 Response:"""),

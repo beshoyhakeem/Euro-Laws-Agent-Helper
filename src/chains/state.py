@@ -6,4 +6,4 @@ class AppState(TypedDict, total=False):
     enhanced_query: str
     docs: List[Document]
     answer: str
-    route: Literal["normal", "rag"]
+    route: Literal["normal", "rag", "history"]
