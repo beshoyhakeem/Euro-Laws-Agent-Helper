@@ -53,7 +53,7 @@ def search_docs(query):
     full_doc_info = """ """
 
     # Search docs using vectorstore
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
     docs = retriever.invoke(query)
 
     for doc in docs:
@@ -79,16 +79,14 @@ def search_docs(query):
         {f_doc_meta['full_doc']}
 {"=="*15} "END OF DOC" {"=="*15}
         """
+        # for debugging purpose
+        if len(full_doc_info) > 5:
+            print("docs found and retrieved successfully")
 
     return full_doc_info    
-
-
 
 if __name__ == "__main__":
 
     print ("true")
 
     print(search_docs("Drug dealing Sentences"))
-
-    
-

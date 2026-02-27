@@ -11,3 +11,10 @@ pip install -r requirements.txt
  python -m src.graph.graph_builder
 
  ```
+
+- to run the FastApi Page
+
+```
+uvicorn app.main:app --reload
+
+```

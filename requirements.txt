@@ -12,3 +12,6 @@ langchain-weaviate
 langchain-openai
 langgraph
 weaviate-client
+fastapi
+uvicorn[standard]
+jinja2

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Euro Laws Chat</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">Euro Laws Assistant</div>
+
+    <div id="messages" class="chat-messages"></div>
+
+    <form id="chat-form" class="chat-input-area">
+      <input
+        id="message-input"
+        type="text"
+        placeholder="Type your question about EU law..."
+        autocomplete="off"
+      />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    // Simple client-side session id stored in localStorage
+    function getSessionId() {
+      let sid = localStorage.getItem("chat_session_id");
+      if (!sid) {
+        sid = self.crypto?.randomUUID
+          ? self.crypto.randomUUID()
+          : String(Date.now());
+        localStorage.setItem("chat_session_id", sid);
+      }
+      return sid;
+    }
+
+    const messagesEl = document.getElementById("messages");
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("message-input");
+
+    function addMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = "message " + role;
+      div.innerText = text;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      const sessionId = getSessionId();
+
+      addMessage("user", text);
+      input.value = "";
+      input.focus();
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text, session_id: sessionId }),
+        });
+
+        if (!res.ok) {
+          addMessage("assistant", "Error: " + res.statusText);
+          return;
+        }
+
+        const data = await res.json();
+        addMessage("assistant", data.answer);
+      } catch (err) {
+        addMessage("assistant", "Network error.");
+      }
+    });
+  </script>
+</body>
+</html>
