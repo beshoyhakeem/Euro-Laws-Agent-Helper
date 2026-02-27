@@ -33,7 +33,7 @@ def search_chunks(query_embedding):
 
     return retrived , celex_ids
  
-# to get the full doc with metadata
+# to get the full doc with metadata from Euro_Law_Documents collection
 def get_full_doc_weaviate(celex_id):
 
     response = eur_docs.query.fetch_objects(
@@ -52,12 +52,14 @@ def search_docs(query):
     celex_ids = []
     full_doc_info = """ """
 
+    # Search docs using vectorstore
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
     docs = retriever.invoke(query)
 
     for doc in docs:
         celex_ids.append(doc.metadata['celex'])
 
+    # Remove duplicates from celex_ids list
     celex_ids = list(set(celex_ids))    
 
     for i , celex_id in enumerate(celex_ids):

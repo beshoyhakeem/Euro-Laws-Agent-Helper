@@ -17,6 +17,7 @@ Response:"""),
 )
 
 ######################################## Query enhancement prompt ##################################
+
 query_enhance_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", """You are a query rebuilder for semantic document retrieval from a vector database.
@@ -41,6 +42,7 @@ Rewritten retrieval query:"""),
 )
 
 ################################### Normal answer prompt ####################################
+
 normal_answer_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", "You are a helpful assistant for European laws."),
@@ -52,6 +54,7 @@ Answer:"""),
 )
 
 ####################################### RAG answer prompt #########################################
+
 rag_answer_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", """You are a legal assistant specializing in European laws.
