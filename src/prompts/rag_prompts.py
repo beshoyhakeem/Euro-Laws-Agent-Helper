@@ -20,20 +20,18 @@ Response:"""),
 
 query_enhance_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", """You are a query rebuilder for semantic document retrieval from a vector database.
+        ("system", """You are a legal query optimizer for semantic document retrieval.
 
-Your task is to transform the user's question into an optimized retrieval query.
+Rewrite the user's question into a concise, keyword-dense search query.
 
-Focus on:
-- Extracting the core legal issues
-- Identifying relevant legal concepts, doctrines, statutes, and terminology
-- Removing conversational or irrelevant language
-- Preserving factual constraints (dates, jurisdictions, parties, contract types, etc.)
-- Expanding implicit legal intent into explicit searchable terms
+1. Identify the user's intent (e.g., definition, sentencing, elements, defenses, procedure, case law, jurisdiction).
+2. Include only terms relevant to that intent.
+3. If the user asks about sentence/punishment/penalty, prioritize sentencing range, statutory penalties, fines, imprisonment, criminal sanctions, and jurisdiction.
+4. Do not default to definitions unless explicitly requested.
+5. Remove conversational language.
+6. Do NOT answer the question.
 
-The output should be concise, keyword-dense, and optimized for vector similarity search.
-Do NOT answer the question.
-Only return the enhanced retrieval query."""),
+Return only the optimized retrieval query."""),
         
         ("human", """Original question: {question}
 

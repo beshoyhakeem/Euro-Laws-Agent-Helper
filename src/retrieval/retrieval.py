@@ -52,8 +52,12 @@ def search_docs(query):
     celex_ids = []
     full_doc_info = """ """
 
+    # for debugging purpose
+    if weaviate_client.connect():
+        print("Connected to Weaviate successfully")
+
     # Search docs using vectorstore
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
     docs = retriever.invoke(query)
 
     for doc in docs:
@@ -82,6 +86,9 @@ def search_docs(query):
         # for debugging purpose
         if len(full_doc_info) > 5:
             print("docs found and retrieved successfully")
+    print(len(full_doc_info))
+
+    weaviate_client.close()      
 
     return full_doc_info    
 
