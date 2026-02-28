@@ -53,8 +53,7 @@ def search_docs(query):
     full_doc_info = """ """
 
     # for debugging purpose
-    if weaviate_client.connect():
-        print("Connected to Weaviate successfully")
+    weaviate_client.connect()
 
     # Search docs using vectorstore
     retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
