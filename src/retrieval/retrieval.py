@@ -48,7 +48,7 @@ def get_full_doc_weaviate(celex_id):
 ################ Using LangChain ####################
 
 # search docs using query to get a string containg all docs with metadata
-def search_docs(query):
+def search_docs_full(query):
     celex_ids = []
     full_doc_info = """ """
 
@@ -90,6 +90,48 @@ def search_docs(query):
     weaviate_client.close()      
 
     return full_doc_info    
+
+
+############################################### Use retrived chunks insted of the full doc ################################################
+
+def search_docs(query):
+    celex_ids = []
+    full_chunks_info = """ """
+
+    # for debugging purpose
+    weaviate_client.connect()
+
+    # Search docs using vectorstore
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+    docs = retriever.invoke(query)
+
+    for i , chunk in enumerate(docs):
+
+        full_chunks_info += f"""
+
+        chunk {i} :
+
+        'celex': {chunk.metadata['celex']}
+        'status': {chunk.metadata['status']}
+        'act_type': {chunk.metadata['act_type']}
+        'treaty': {chunk.metadata['treaty']}
+
+        full_chunk :
+
+        {chunk.page_content}
+{"=="*15} "END OF DOC" {"=="*15}
+        """
+        # for debugging purpose
+        if len(full_chunks_info) > 5:
+            print("docs found and retrieved successfully")
+    print(len(full_chunks_info))
+
+    weaviate_client.close()      
+
+    return full_chunks_info    
+
+
+
 
 if __name__ == "__main__":
 
