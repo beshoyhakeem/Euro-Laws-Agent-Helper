@@ -29,6 +29,8 @@ def get_vectorstore():
     return _vectorstore
 
 
+
+
 def close_connections():
     print("Closing Weaviate connection...")
     weaviate_client.close()
