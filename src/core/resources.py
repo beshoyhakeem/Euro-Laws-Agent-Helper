@@ -22,13 +22,17 @@ def get_vectorstore():
         print("Initializing vector store...")
         _vectorstore = WeaviateVectorStore(
             client=weaviate_client,
-            index_name="Euro_Laws",
+            index_name="Euro_Laws_hybrid",
             text_key="text",
             embedding=get_embedding_model(),
         )
     return _vectorstore
 
+def get_embedding(query):
+    embedding_model = SentenceTransformersEmbeddings("sentence-transformers/all-mpnet-base-v2")
+    embed_query = embedding_model.embed_query(query)
 
+    return embed_query
 
 
 def close_connections():

@@ -1,4 +1,4 @@
-from src.core.resources import get_vectorstore , weaviate_client
+from src.core.resources import get_vectorstore , weaviate_client , get_embedding
 from weaviate.classes.query import Filter
 import json
 
@@ -6,6 +6,9 @@ vectorstore = get_vectorstore()
 
 # To get the full doc form Euro_Law_Documents collection
 eur_docs = weaviate_client.collections.get("Euro_Law_Documents")
+
+# To use the hybrid search form the collections
+eur_docs_hybrid = weaviate_client.collections.get("Euro_Laws_hybrid")
 
 
 def search_chunks(query_embedding):
@@ -132,37 +135,37 @@ def search_docs(query):
 
 
 ############################################### Use retrived chunks insted of the full doc with hybrid search ################################################
-def search_docs(query):
+def search_docs_hybrid(query):
     full_chunks_info = """ """
 
     # for debugging purpose
     weaviate_client.connect()
 
+    # embed query
+    embed_query = get_embedding(query)
+
     # Search docs using vectorstore
-    retriever = vectorstore.as_retriever(
+    response = eur_docs_hybrid.query.hybrid(
+        query= query,
+        vector= embed_query,
+        alpha=0.5,
+        limit=5
+    )
 
-        search_type="hybrid",
-        search_kwargs={
-            "k": 5,
-            "alpha": 0.5
-        }
-   )
-    docs = retriever.invoke(query)
-
-    for i , chunk in enumerate(docs):
+    for i , obj in enumerate(response.objects):
 
         full_chunks_info += f"""
 
         chunk {i} :
 
-        'celex': {chunk.metadata['celex']}
-        'status': {chunk.metadata['status']}
-        'act_type': {chunk.metadata['act_type']}
-        'treaty': {chunk.metadata['treaty']}
+        'celex': {obj.properties['celex']}
+        'status': {obj.properties['status']}
+        'act_type': {obj.properties['act_type']}
+        'treaty': {obj.properties['treaty']}
 
         full_chunk :
 
-        {chunk.page_content}
+        {obj.properties['text']}
 {"=="*15} "END OF DOC" {"=="*15}
         """
         # for debugging purpose
@@ -180,4 +183,4 @@ if __name__ == "__main__":
 
     print ("true")
 
-    print(search_docs("Drug dealing Sentences"))
+    print(search_docs_hybrid("Drug dealing Sentences"))
