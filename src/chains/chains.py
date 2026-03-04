@@ -5,7 +5,7 @@ from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from src.chains.state import AppState, Literal
 from src.generation.chat import llm , llm_reason
 from src.prompts.rag_prompts import *
-from src.retrieval.retrieval import search_docs
+from src.retrieval.retrieval import search_docs, search_docs_hybrid
 
 
 # Chain to Classify User Question
@@ -58,11 +58,10 @@ def query_enchance(state: AppState) -> AppState:
 def retrieve_docs(state: AppState) -> AppState:
 
     query : str = state.get("enhanced_query")
-    docs = search_docs(query)
+    docs = search_docs_hybrid(query)
 
     # For debugging purpuse
     #print(f"docs :\n {docs}")
-    
     return {"docs": docs}
 
 # Chain to answer User Question form docs "RAG"

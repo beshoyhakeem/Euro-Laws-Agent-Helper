@@ -51,6 +51,47 @@ Answer:"""),
     ]
 )
 
+######################################## relevant chunks prompt ##################################
+
+check_relevant_chunks_prompt = ChatPromptTemplate.from_messages(
+[
+    (
+        "system",
+        """You are an expert in European Union law tasked with identifying which legal document chunks are relevant to a user's query.
+
+You will receive:
+1. A user query
+2. Several document chunks with metadata including their CELEX ID.
+
+Your task:
+- Determine which chunks are relevant to the query.
+- Rank the relevant chunks from MOST relevant to LEAST relevant.
+- Exclude any chunks that are not relevant.
+
+Return ONLY a valid Python list containing the CELEX IDs of the relevant chunks in ranked order.
+
+Rules:
+- Do not include explanations.
+- Do not include irrelevant chunks.
+- The output must be ONLY a Python list.
+
+Example output:
+["32014L0057", "32017L1371", "32009D0316"]
+"""
+    ),
+    (
+        "human",
+        """User Query:
+{question}
+
+Document Chunks:
+{chunks}
+
+Return the ranked list of relevant CELEX IDs."""
+    ),
+]
+)
+
 ####################################### RAG answer prompt #########################################
 
 rag_answer_prompt = ChatPromptTemplate.from_messages(

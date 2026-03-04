@@ -178,7 +178,6 @@ def search_docs_hybrid(query):
     return full_chunks_info  
 
 
-
 if __name__ == "__main__":
 
     print ("true")

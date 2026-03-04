@@ -5,5 +5,7 @@ class AppState(TypedDict, total=False):
     question: str
     enhanced_query: str
     docs: List[Document]
+    chunks: List[Document]
+    relevent_celex: List
     answer: str
     route: Literal["normal", "rag", "history"]
