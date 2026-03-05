@@ -5,6 +5,7 @@ from langchain_weaviate import WeaviateVectorStore
 # Private globals (initially None)
 _embedding_model = None
 _vectorstore = None
+_vectorstore_full_doc = None
 
 def get_embedding_model():
     global _embedding_model
@@ -27,6 +28,20 @@ def get_vectorstore():
             embedding=get_embedding_model(),
         )
     return _vectorstore
+
+# vectorstore for full doc
+def get_vectorstore_full_doc():
+    global _vectorstore_full_doc
+    if _vectorstore_full_doc is None:
+        print("Initializing vector store...")
+        _vectorstore_full_doc = WeaviateVectorStore(
+            client=weaviate_client,
+            index_name="Euro_Law_Documents",
+            text_key="full_doc",
+            embedding=get_embedding_model(),
+        )
+    return _vectorstore_full_doc
+
 
 def get_embedding(query):
     embedding_model = SentenceTransformersEmbeddings("sentence-transformers/all-mpnet-base-v2")

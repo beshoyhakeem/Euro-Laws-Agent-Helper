@@ -1,8 +1,10 @@
-from src.core.resources import get_vectorstore , weaviate_client , get_embedding
+from src.core.resources import get_vectorstore, get_vectorstore_full_doc, weaviate_client , get_embedding
 from weaviate.classes.query import Filter
 import json
 
 vectorstore = get_vectorstore()
+
+vectorstore_full_doc = get_vectorstore_full_doc()
 
 # To get the full doc form Euro_Law_Documents collection
 eur_docs = weaviate_client.collections.get("Euro_Law_Documents")
@@ -97,8 +99,7 @@ def search_docs_full(query):
 
 ############################################### Use retrived chunks insted of the full doc ################################################
 
-def search_docs(query):
-    celex_ids = []
+def search_chunks(query):
     full_chunks_info = """ """
 
     # for debugging purpose
@@ -170,16 +171,62 @@ def search_docs_hybrid(query):
         """
         # for debugging purpose
         if len(full_chunks_info) > 5:
-            print("docs found and retrieved successfully")
+            print("chunks found and retrieved successfully")
     print(len(full_chunks_info))
+    weaviate_client.close()
 
-    weaviate_client.close()      
+    # for  for debugging purpose
+    print(f"full_chunks_info : \n {full_chunks_info}")   
+      
 
     return full_chunks_info  
+
+
+############################################### Use retrived chunks celex to get full doc search to summrize it ################################################
+def get_full_docs_celex(celex_ids):
+    full_doc_info = """ """
+
+    # open weaviate client
+    weaviate_client.connect()
+
+    # Remove duplicates from celex_ids list
+    celex_ids = list(set(celex_ids))    
+
+    for i , celex_id in enumerate(celex_ids):
+        f_doc_meta = get_full_doc_weaviate(celex_id)
+
+        full_doc_info += f"""
+
+        doc {i} :
+
+        'celex': {f_doc_meta['celex']}
+        'status': {f_doc_meta['status']}
+        'act_type': {f_doc_meta['act_type']}
+        'treaty': {f_doc_meta['treaty']}
+
+        full_doc :
+
+        {f_doc_meta['full_doc']}
+{"=="*15} "END OF DOC" {"=="*15}
+        """
+        # for debugging purpose
+        if len(full_doc_info) > 5:
+            print("docs found and retrieved successfully")
+    print(len(full_doc_info))
+
+    #open weaviate client
+    weaviate_client.close()      
+
+    return len(full_doc_info) 
+
 
 
 if __name__ == "__main__":
 
     print ("true")
 
-    print(search_docs_hybrid("Drug dealing Sentences"))
+    #print(search_docs_hybrid("Drug dealing Sentences"))
+
+    print(get_full_docs_celex(["32010R0330", "32014R0316", "32010R1218"]))
+
+

@@ -1,11 +1,11 @@
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.output_parsers import StrOutputParser ,JsonOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 
 from src.chains.state import AppState, Literal
 from src.generation.chat import llm , llm_reason
 from src.prompts.rag_prompts import *
-from src.retrieval.retrieval import search_docs, search_docs_hybrid
+from src.retrieval.retrieval import get_full_docs_celex, search_docs_hybrid
 
 
 # Chain to Classify User Question
@@ -64,12 +64,28 @@ def retrieve_chunks(state: AppState) -> AppState:
     #print(f"chunks :\n {chunks}")
     return {"chunks": chunks}
 
+# function to get the celex of releted chunks
+def get_related_celex(state: AppState) -> AppState:
+
+    chain = check_relevant_chunks_prompt | llm | JsonOutputParser()
+    relevent_celex = chain.invoke(
+        {
+            "question": state["question"],
+            "chunks": state["chunks"],
+        }
+    )
+
+    print(f"relevent_celex: {relevent_celex}")
+
+    print(type(relevent_celex), relevent_celex)
+
+    return {"relevent_celex": relevent_celex}
 
 # function to retrive docs
-def retrieve_docs(state: AppState) -> AppState:
+def retrieve_full_docs(state: AppState) -> AppState:
 
-    query : str = state.get("enhanced_query")
-    docs = search_docs(query)
+    celex_ids : list = state.get("relevent_celex")
+    docs = get_full_docs_celex(celex_ids)
 
     # For debugging purpuse
     #print(f"docs :\n {docs}")
@@ -82,7 +98,7 @@ def rag_answer_chain(state: AppState) -> AppState:
     rag_answer = chain.invoke(
         {
             "question": state["question"],
-            "context": state["chunks"],
+            "context": state["docs"],
         }
     )
 
