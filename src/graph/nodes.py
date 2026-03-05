@@ -6,6 +6,7 @@ from src.chains.chains import  ( classify_question,
                                 normal_question,
                                 history_question,
                                 query_enchance,
+                                retrieve_chunks,
                                 retrieve_docs,
                                 rag_answer_chain
                                )
@@ -19,6 +20,7 @@ def build_app_graph():
     graph.add_node("normal_answer", normal_question)
     graph.add_node("history_answer", history_question)
     graph.add_node("enhance_query", query_enchance)
+    graph.add_node("retrieve_chunks", retrieve_chunks)
     graph.add_node("retrieve_docs", retrieve_docs)
     graph.add_node("rag_answer", rag_answer_chain)
 
@@ -37,8 +39,8 @@ def build_app_graph():
     )
 
     # RAG branch flow
-    graph.add_edge("enhance_query", "retrieve_docs")
-    graph.add_edge("retrieve_docs", "rag_answer")
+    graph.add_edge("enhance_query", "retrieve_chunks")
+    graph.add_edge("retrieve_chunks", "rag_answer")
 
     # End points
     graph.add_edge("normal_answer", END)

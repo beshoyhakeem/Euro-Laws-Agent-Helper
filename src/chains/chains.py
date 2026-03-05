@@ -54,11 +54,22 @@ def query_enchance(state: AppState) -> AppState:
 
     return {"enhanced_query": enhaced_query }
 
+# function to retrive chunks
+def retrieve_chunks(state: AppState) -> AppState:
+
+    query : str = state.get("enhanced_query")
+    chunks = search_docs_hybrid(query)
+
+    # For debugging purpuse
+    #print(f"chunks :\n {chunks}")
+    return {"chunks": chunks}
+
+
 # function to retrive docs
 def retrieve_docs(state: AppState) -> AppState:
 
     query : str = state.get("enhanced_query")
-    docs = search_docs_hybrid(query)
+    docs = search_docs(query)
 
     # For debugging purpuse
     #print(f"docs :\n {docs}")
@@ -71,7 +82,7 @@ def rag_answer_chain(state: AppState) -> AppState:
     rag_answer = chain.invoke(
         {
             "question": state["question"],
-            "context": state["docs"],
+            "context": state["chunks"],
         }
     )
 
