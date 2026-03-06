@@ -217,7 +217,7 @@ def get_full_docs_celex(celex_ids):
     #open weaviate client
     weaviate_client.close()      
 
-    return len(full_doc_info) 
+    return full_doc_info
 
 
 

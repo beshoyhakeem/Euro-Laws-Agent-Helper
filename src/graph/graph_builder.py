@@ -12,31 +12,6 @@ graph_with_history = RunnableWithMessageHistory(
 
 if __name__ == "__main__":
 
-
-    q = """"
-    Hello everyone, my divorce was finalized in 2024. And my ex is selling her property which we split during divorce. But we both are on deed till date when selling. There’s an offer in place. The property is being sold for profit close to 250K. And all proceeds will be going to my Ex. I have been told I have to be there for signing paperwork next week. 
-    1). How do I make sure the buyer doesn’t sue me in the future after buying the property for any kind of reasons. 
-    2). How do I make sure my ex is responsible for capital gains I’m not held responsible for those gains to pay tax.
-    3). Thankyou 🙏🏾
-    
-    """
-    """
-    result = app_graph.invoke({"question": q})
-    final_answer = result["answer"]
-    
-    print(final_answer)
-    """
-
-    """
-    session_id = ""
-
-    result = graph_with_history.invoke(
-    {"question": q},
-    config={"configurable": {"session_id": session_id}},
-    )
-    answer = result["answer"]
-    """
-
     session_id = "user-1"  # or from user auth / tab id
 
     while True:
