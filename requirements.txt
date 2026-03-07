@@ -12,6 +12,7 @@ langchain-weaviate
 langchain-openai
 langgraph
 weaviate-client
+tiktoken
 fastapi
 uvicorn[standard]
 jinja2

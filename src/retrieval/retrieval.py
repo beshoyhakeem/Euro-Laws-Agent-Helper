@@ -1,4 +1,5 @@
 from src.core.resources import get_vectorstore, get_vectorstore_full_doc, weaviate_client , get_embedding
+from src.core.utils import count_tokens
 from weaviate.classes.query import Filter
 import json
 
@@ -207,12 +208,13 @@ def get_full_docs_celex(celex_ids):
         full_doc :
 
         {f_doc_meta['full_doc']}
-{"=="*15} "END OF DOC" {"=="*15}
+ {"=="*15} "END OF DOC" {"=="*15}
         """
         # for debugging purpose
         if len(full_doc_info) > 5:
             print("docs found and retrieved successfully")
     print(len(full_doc_info))
+    print(count_tokens(full_doc_info))
 
     #open weaviate client
     weaviate_client.close()      
