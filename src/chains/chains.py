@@ -81,6 +81,11 @@ def get_related_celex(state: AppState) -> AppState:
 
     return {"relevent_celex": relevent_celex}
 
+# function to summrize docs
+def summrize_full_docs(state: AppState) -> AppState:
+
+    return     
+
 # function to retrive docs
 def retrieve_full_docs(state: AppState) -> AppState:
 
