@@ -92,6 +92,21 @@ Return the ranked list of relevant CELEX IDs."""
 ]
 )
 
+####################################### summarize_docs prompt #########################################
+
+summarize_docs_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", """You are a legal assistant specializing in European laws.
+Answer the user's question using ONLY the provided context documents.
+If the answer isn't in the context, say so clearly."""),
+        ("human", """Context documents:
+{context}
+
+Question: {question}
+Answer:"""),
+    ]
+)
+
 ####################################### RAG answer prompt #########################################
 
 rag_answer_prompt = ChatPromptTemplate.from_messages(
