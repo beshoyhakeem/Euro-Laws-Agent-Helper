@@ -93,10 +93,28 @@ def retrieve_full_docs(state: AppState) -> AppState:
     return {"full_docs": full_docs}
 
 ############################################### function to summrize docs ###############################################
+
+# still under development 
 def summrize_full_docs(state: AppState) -> AppState:
 
+    chunks_for_summrize:list = state.get("chunks_for_summrize")
 
-    return 
+    summrize_docs: str = """ """
+    summrize_docs_list: list = []
+
+    chain = summarize_docs_prompt | llm | StrOutputParser()
+
+    for i, list_chunks in enumerate (chunks_for_summrize):
+
+        summrize_docs += f"""doc{i}:\n"""
+
+        for i, chunk in list_chunks:
+    
+            summrize_docs += f"""chunk{i}:\n  {chain.invoke({ "chunk_to_summrize": chunk})}\n"""
+    
+        summrize_docs += f"""{"=="*15} END OF DOC{i} {"=="*15} \n"""
+
+    return {"summrize_docs": summrize_docs}
 
 ############################################### Chain to answer User Question form docs "RAG" ###############################################
 def rag_answer_chain(state: AppState) -> AppState:
