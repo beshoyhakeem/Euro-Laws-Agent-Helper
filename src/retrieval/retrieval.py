@@ -1,6 +1,7 @@
-from src.core.resources import get_vectorstore, get_vectorstore_full_doc, weaviate_client , get_embedding
-from src.core.utils import count_tokens
 from weaviate.classes.query import Filter
+from src.core.resources import get_vectorstore, get_vectorstore_full_doc, weaviate_client, get_embedding
+from src.core.utils import count_tokens
+
 import json
 
 vectorstore = get_vectorstore()
@@ -13,11 +14,22 @@ eur_docs = weaviate_client.collections.get("Euro_Law_Documents")
 # To use the hybrid search form the collections
 eur_docs_hybrid = weaviate_client.collections.get("Euro_Laws_hybrid")
 
+# to get the full doc with metadata from Euro_Law_Documents collection
+def get_full_doc_weaviate(celex_id):
 
+    response = eur_docs.query.fetch_objects(
+    filters=Filter.by_property("celex").equal(celex_id),
+    limit=1
+)
+    r = response.objects[0].properties
+
+    # r is a dict with key, values for each doc
+    return r 
+
+###################################### search chunks with weavaite ##############################
 def search_chunks(query_embedding):
 
     # Use Euro_Laws collection
-
     Euro_Laws = weaviate_client.collections.use("Euro_Laws")
 
     # Perform a vector search with NearVector
@@ -39,19 +51,7 @@ def search_chunks(query_embedding):
 
     return retrived , celex_ids
  
-# to get the full doc with metadata from Euro_Law_Documents collection
-def get_full_doc_weaviate(celex_id):
-
-    response = eur_docs.query.fetch_objects(
-    filters=Filter.by_property("celex").equal(celex_id),
-    limit=1
-)
-    r = response.objects[0].properties
-
-    # r is a dict with key, values for each doc
-    return r    
-
-################ Using LangChain ####################
+###################################### Using LangChain with weavite ##############################
 
 # search docs using query to get a string containg all docs with metadata
 def search_docs_full(query):
@@ -135,10 +135,12 @@ def search_chunks(query):
 
     return full_chunks_info    
 
+############################################### THE FUNCTIONS USED NOW ################################################
 
 ############################################### Use retrived chunks insted of the full doc with hybrid search ################################################
+
 def search_docs_hybrid(query):
-    full_chunks_info = """ """
+    full_chunks_info: str = """ """
 
     # for debugging purpose
     weaviate_client.connect()
@@ -185,6 +187,7 @@ def search_docs_hybrid(query):
 
 ############################################### Use retrived chunks celex to get full doc search to summrize it ################################################
 def get_full_docs_celex(celex_ids):
+    docs_list: list[str] = []
     full_doc_info = """ """
 
     # open weaviate client
@@ -195,6 +198,22 @@ def get_full_docs_celex(celex_ids):
 
     for i , celex_id in enumerate(celex_ids):
         f_doc_meta = get_full_doc_weaviate(celex_id)
+
+        docs_list.append(f"""
+
+        doc {i} :
+
+        'celex': {f_doc_meta['celex']}
+        'status': {f_doc_meta['status']}
+        'act_type': {f_doc_meta['act_type']}
+        'treaty': {f_doc_meta['treaty']}
+
+        full_doc :
+
+        {f_doc_meta['full_doc']}
+ {"=="*15}"END OF DOC"{"=="*15}
+        """
+        )
 
         full_doc_info += f"""
 
@@ -219,8 +238,7 @@ def get_full_docs_celex(celex_ids):
     #open weaviate client
     weaviate_client.close()      
 
-    return full_doc_info
-
+    return full_doc_info, docs_list
 
 
 if __name__ == "__main__":
@@ -229,6 +247,8 @@ if __name__ == "__main__":
 
     #print(search_docs_hybrid("Drug dealing Sentences"))
 
-    print(get_full_docs_celex(["32010R0330", "32014R0316", "32010R1218"]))
+    full_docs_info, docslist = get_full_docs_celex(["32010R0330", "32014R0316", "32010R1218"])
+
+    print(full_docs_info)
 
 

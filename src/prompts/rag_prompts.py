@@ -96,13 +96,10 @@ Return the ranked list of relevant CELEX IDs."""
 
 summarize_docs_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", """You are a legal assistant specializing in European laws.
-Answer the user's question using ONLY the provided context documents.
-If the answer isn't in the context, say so clearly."""),
+        ("system", """."""),
         ("human", """Context documents:
-{context}
+{chunk_to_summrize}
 
-Question: {question}
 Answer:"""),
     ]
 )

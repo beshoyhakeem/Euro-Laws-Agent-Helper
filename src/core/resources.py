@@ -21,12 +21,14 @@ def get_vectorstore():
     global _vectorstore
     if _vectorstore is None:
         print("Initializing vector store...")
+        weaviate_client.connect()
         _vectorstore = WeaviateVectorStore(
             client=weaviate_client,
             index_name="Euro_Laws_hybrid",
             text_key="text",
             embedding=get_embedding_model(),
         )
+        weaviate_client.close()
     return _vectorstore
 
 # vectorstore for full doc
@@ -34,12 +36,14 @@ def get_vectorstore_full_doc():
     global _vectorstore_full_doc
     if _vectorstore_full_doc is None:
         print("Initializing vector store...")
+        weaviate_client.connect()
         _vectorstore_full_doc = WeaviateVectorStore(
             client=weaviate_client,
             index_name="Euro_Law_Documents",
             text_key="full_doc",
             embedding=get_embedding_model(),
         )
+        weaviate_client.close()
     return _vectorstore_full_doc
 
 

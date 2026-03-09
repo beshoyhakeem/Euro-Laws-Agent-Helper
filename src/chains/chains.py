@@ -8,7 +8,7 @@ from src.prompts.rag_prompts import *
 from src.retrieval.retrieval import get_full_docs_celex, search_docs_hybrid
 
 
-# Chain to Classify User Question
+############################################### Chain to Classify User Question ###############################################
 def classify_question(state: AppState) -> AppState:
 
     chain = classifier_prompt | llm_reason | StrOutputParser()
@@ -27,7 +27,7 @@ def classify_question(state: AppState) -> AppState:
 
     return {"route": route}
 
-# Chain to answer normal User Question
+############################################### Chain to answer normal User Question ###############################################
 def normal_question(state: AppState) -> AppState:
 
     chain = normal_answer_prompt| llm | StrOutputParser()
@@ -35,15 +35,14 @@ def normal_question(state: AppState) -> AppState:
 
     return {"answer": normal_que_answer}
 
-# Chain to answer User Question dependinmg on history
+############################################### Chain to answer User Question dependinmg on history ###############################################
 def history_question(state: AppState) -> AppState:
 
     chain = normal_answer_prompt| llm | StrOutputParser()
     history_que_answer: str = chain.invoke({"question": state["question"]})
     return {"answer": history_que_answer}
 
-
-# Chain to enhance User Question for RAG
+############################################### Chain to enhance User Question for RAG ###############################################
 def query_enchance(state: AppState) -> AppState:
 
     chain = query_enhance_prompt | llm | StrOutputParser()
@@ -54,7 +53,7 @@ def query_enchance(state: AppState) -> AppState:
 
     return {"enhanced_query": enhaced_query }
 
-# function to retrive chunks
+############################################### function to retrive chunks ###############################################
 def retrieve_chunks(state: AppState) -> AppState:
 
     query : str = state.get("enhanced_query")
@@ -64,7 +63,7 @@ def retrieve_chunks(state: AppState) -> AppState:
     #print(f"chunks :\n {chunks}")
     return {"chunks": chunks}
 
-# function to get the celex of releted chunks
+############################################### Chain to get the celex of releted chunks ###############################################
 def get_related_celex(state: AppState) -> AppState:
 
     chain = check_relevant_chunks_prompt | llm | JsonOutputParser()
@@ -75,28 +74,31 @@ def get_related_celex(state: AppState) -> AppState:
         }
     )
 
+    # for debugging purpose
     print(f"relevent_celex: {relevent_celex}")
-
+    # for debugging purpose
     print(type(relevent_celex), relevent_celex)
 
     return {"relevent_celex": relevent_celex}
 
-# function to summrize docs
-def summrize_full_docs(state: AppState) -> AppState:
-
-    return     
-
-# function to retrive docs
+   
+############################################### function to retrive docs ###############################################
 def retrieve_full_docs(state: AppState) -> AppState:
 
     celex_ids : list = state.get("relevent_celex")
-    docs = get_full_docs_celex(celex_ids)
+    full_docs = get_full_docs_celex(celex_ids)
 
     # For debugging purpuse
     #print(f"docs :\n {docs}")
-    return {"docs": docs}
+    return {"full_docs": full_docs}
 
-# Chain to answer User Question form docs "RAG"
+############################################### function to summrize docs ###############################################
+def summrize_full_docs(state: AppState) -> AppState:
+
+
+    return 
+
+############################################### Chain to answer User Question form docs "RAG" ###############################################
 def rag_answer_chain(state: AppState) -> AppState:
 
     chain = rag_answer_prompt | llm | StrOutputParser()

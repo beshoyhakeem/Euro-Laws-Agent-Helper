@@ -3,9 +3,12 @@ from langchain_core.documents import Document
 
 class AppState(TypedDict, total=False):
     question: str
-    enhanced_query: str
-    docs: List[Document]
-    chunks: List[Document]
-    relevent_celex: List
-    answer: str
     route: Literal["normal", "rag", "history"]
+    enhanced_query: str
+    chunks: str
+    relevent_celex: List
+    full_docs: str
+    chunks_for_summrize: list[list[str]]
+    summrize_docs: List[str]
+    answer: str
+    
