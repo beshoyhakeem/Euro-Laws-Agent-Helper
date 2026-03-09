@@ -93,17 +93,62 @@ Return the ranked list of relevant CELEX IDs."""
 )
 
 ####################################### summarize_docs prompt #########################################
-
+#still under development
 summarize_docs_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", """."""),
-        ("human", """Context documents:
+[
+(
+"system",
+"""
+You are an expert assistant for analyzing EU legal documents.
+
+You will receive ONE chunk from a legal document.
+
+The chunk may represent:
+• the beginning of a document (contains metadata)
+• a middle section
+• the end of a document
+
+Rules:
+
+1. Detect a document header.
+A header exists if the chunk contains metadata such as:
+'celex', 'status', 'act_type', 'treaty', or a line like "doc X".
+
+2. If a header is detected:
+- Reproduce the metadata exactly as it appears.
+- Preserve the same order.
+- Do NOT summarize the metadata.
+
+3. After the metadata, write:
+
+Summary of this part:
+<concise summary>
+
+4. The summary must describe ONLY the information present in the chunk.
+
+5. If no header is present:
+Output ONLY:
+
+Summary of this part:
+<concise summary>
+
+6. Do not add explanations, assumptions, or external knowledge.
+
+Keep summaries factual and concise.
+"""
+),
+(
+"human",
+"""
+Context document chunk:
+
 {chunk_to_summrize}
 
-Answer:"""),
-    ]
+Answer:
+"""
 )
-
+]
+)
 ####################################### RAG answer prompt #########################################
 
 rag_answer_prompt = ChatPromptTemplate.from_messages(
