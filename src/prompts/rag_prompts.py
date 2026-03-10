@@ -99,48 +99,48 @@ summarize_docs_prompt = ChatPromptTemplate.from_messages(
 (
 "system",
 """
-You are an expert assistant for analyzing EU legal documents.
+You are an expert assistant for analysing EU legal documents.
 
-You will receive ONE chunk from a legal document.
+You will receive ONE chunk of a legal document.
 
-The chunk may represent:
-• the beginning of a document (contains metadata)
-• a middle section
-• the end of a document
+Your task is NOT to summarize the chunk.
+Your task is to EXTRACT the legal structure and key legal basis information.
 
-Rules:
+Follow these rules:
 
-1. Detect a document header.
-A header exists if the chunk contains metadata such as:
-'celex', 'status', 'act_type', 'treaty', or a line like "doc X".
+1. If the chunk contains document metadata (e.g. 'celex', 'status', 'act_type', 'treaty', or "doc X"):
+   - Reproduce it exactly as it appears.
+   - Keep the same order.
 
-2. If a header is detected:
-- Reproduce the metadata exactly as it appears.
-- Preserve the same order.
-- Do NOT summarize the metadata.
+2. Then extract the legal elements that appear in the chunk. Only extract what is present.
 
-3. After the metadata, write:
+Possible elements include:
+- Title of the legal act
+- Date of adoption
+- Legal basis ("Having regard to...")
+- Recitals ("Whereas")
+- Articles
+- Annex references
+- Listed persons / entities
+- Legal obligations or measures
 
-Summary of this part:
-<concise summary>
+3. Do NOT summarize the entire document.
+4. Only describe the specific legal information present in the chunk.
+5. If the chunk contains structured data (lists, annex entries, persons), extract their meaning concisely.
 
-4. The summary must describe ONLY the information present in the chunk.
+Output format:
 
-5. If no header is present:
-Output ONLY:
+[metadata if present]
 
-Summary of this part:
-<concise summary>
-
-6. Do not add explanations, assumptions, or external knowledge.
-
-Keep summaries factual and concise.
+Extracted legal content:
+- ...
+- ...
 """
 ),
 (
 "human",
 """
-Context document chunk:
+Document chunk:
 
 {chunk_to_summrize}
 
