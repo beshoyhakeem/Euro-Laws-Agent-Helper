@@ -93,32 +93,34 @@ def retrieve_full_docs(state: AppState) -> AppState:
 
 ############################################### function to summrize docs ###############################################
 
-# still under development 
+# still under development good to go now but need batch invoke to improve time
 def summrize_full_docs_if_needed(state: AppState) -> AppState:
-
-    full_docs = state["full_docs"]
     
-    if count_tokens(full_docs) > 20000:
+    full_docs = state["full_docs"]      # get the full_docs
+    count_tokens_full_doc = count_tokens(full_docs)     # count the No of tokens full_docs
+    print(f"count_tokens_full_doc : {count_tokens_full_doc}")
+    
+    if count_tokens_full_doc > 20000:       # if full_docs count > 20k tokens run summrize logic
         docs_list = state["docs_list"]
-        chunks_for_summrize = chunk_full_docs_for_summrize(docs_list)
+        chunks_for_summrize = chunk_full_docs_for_summrize(docs_list)   # Chunk each retrived doc
 
-        summrize_docs: str = """"""
+        summrize_docs: str = """"""     # initialize summrize_docs string to hold summrized docs
 
-        chain = summarize_docs_prompt | llm | StrOutputParser()
+        chain = summarize_docs_prompt | llm | StrOutputParser()     # initialize chain with summarization prompt
 
-        for i, list_chunks in enumerate (chunks_for_summrize):
+        for i, list_chunks in enumerate (chunks_for_summrize):      # list_chunks is a list of list contains each list holds chunks of a doc list[0] is doc0 chunks 
 
-            summrize_docs += f"""doc{i}:\n"""
+            summrize_docs += f"""\ndoc{i}:\n"""
 
-            for j, chunk in enumerate (list_chunks):
+            for j, chunk in enumerate (list_chunks):        # loop over chunks in each list
         
-                summrize_docs += f"""chunk{j}:\n  {chain.invoke({ "chunk_to_summrize": chunk})}\n"""
+                summrize_docs += f"""\nchunk{j}:  \n{chain.invoke({ "chunk_to_summrize": chunk})}\n"""      # for each chunk run summrize chain
         
-            summrize_docs += f"""{"=="*15} END OF DOC{i} {"=="*15} \n"""
+            summrize_docs += f"""\n{"=="*15} END OF DOC{i} {"=="*15}\n"""
 
-        return {"context": summrize_docs}
+        return {"context": summrize_docs}       # return summrize_docs 
     
-    else: return {"context": full_docs}
+    else: return {"context": full_docs}     # return full_docs if less than 20k tokens
 
 ############################################### Chain to answer User Question form docs "RAG" ###############################################
 def rag_answer_chain(state: AppState) -> AppState:
