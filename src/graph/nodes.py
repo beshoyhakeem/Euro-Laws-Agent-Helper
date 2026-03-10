@@ -9,6 +9,7 @@ from src.chains.chains import  ( classify_question,
                                 retrieve_chunks,
                                 get_related_celex,
                                 retrieve_full_docs,
+                                summrize_full_docs_if_needed,
                                 rag_answer_chain
                                )
 
@@ -24,6 +25,7 @@ def build_app_graph():
     graph.add_node("retrieve_chunks", retrieve_chunks)
     graph.add_node("get_related_celex", get_related_celex)
     graph.add_node("retrieve_full_docs", retrieve_full_docs)
+    graph.add_node("summrize_full_docs_if_needed", summrize_full_docs_if_needed)
     graph.add_node("rag_answer", rag_answer_chain)
 
     # Entry
@@ -44,7 +46,8 @@ def build_app_graph():
     graph.add_edge("enhance_query", "retrieve_chunks")
     graph.add_edge("retrieve_chunks", "get_related_celex")
     graph.add_edge("get_related_celex", "retrieve_full_docs")
-    graph.add_edge("retrieve_full_docs", "rag_answer")
+    graph.add_edge("retrieve_full_docs", "summrize_full_docs_if_needed")
+    graph.add_edge("summrize_full_docs_if_needed", "rag_answer")
 
     # End points
     graph.add_edge("normal_answer", END)

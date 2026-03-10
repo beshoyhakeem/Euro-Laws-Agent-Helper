@@ -6,9 +6,9 @@ class AppState(TypedDict, total=False):
     route: Literal["normal", "rag", "history"]
     enhanced_query: str
     chunks: str
-    relevent_celex: List
+    relevent_celex: List[str]
     full_docs: str
-    chunks_for_summrize: list[list[str]]
-    summrize_docs: List[str]
+    docs_list: list[str]
+    context: str
     answer: str
     

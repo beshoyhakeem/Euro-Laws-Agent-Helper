@@ -6,7 +6,8 @@ from src.chains.state import AppState, Literal
 from src.generation.chat import llm , llm_reason
 from src.prompts.rag_prompts import *
 from src.retrieval.retrieval import get_full_docs_celex, search_docs_hybrid
-
+from src.retrieval.summrize_docs import chunk_full_docs_for_summrize
+from src.core.utils import count_tokens
 
 ############################################### Chain to Classify User Question ###############################################
 def classify_question(state: AppState) -> AppState:
@@ -86,35 +87,38 @@ def get_related_celex(state: AppState) -> AppState:
 def retrieve_full_docs(state: AppState) -> AppState:
 
     celex_ids : list = state.get("relevent_celex")
-    full_docs = get_full_docs_celex(celex_ids)
+    full_docs, docs_list = get_full_docs_celex(celex_ids)
 
-    # For debugging purpuse
-    #print(f"docs :\n {docs}")
-    return {"full_docs": full_docs}
+    return {"full_docs": full_docs, "docs_list": docs_list}
 
 ############################################### function to summrize docs ###############################################
 
 # still under development 
-def summrize_full_docs(state: AppState) -> AppState:
+def summrize_full_docs_if_needed(state: AppState) -> AppState:
 
-    chunks_for_summrize:list = state.get("chunks_for_summrize")
-
-    summrize_docs: str = """ """
-    summrize_docs_list: list = []
-
-    chain = summarize_docs_prompt | llm | StrOutputParser()
-
-    for i, list_chunks in enumerate (chunks_for_summrize):
-
-        summrize_docs += f"""doc{i}:\n"""
-
-        for i, chunk in list_chunks:
+    full_docs = state["full_docs"]
     
-            summrize_docs += f"""chunk{i}:\n  {chain.invoke({ "chunk_to_summrize": chunk})}\n"""
-    
-        summrize_docs += f"""{"=="*15} END OF DOC{i} {"=="*15} \n"""
+    if count_tokens(full_docs) > 20000:
+        docs_list = state["docs_list"]
+        chunks_for_summrize = chunk_full_docs_for_summrize(docs_list)
 
-    return {"summrize_docs": summrize_docs}
+        summrize_docs: str = """"""
+
+        chain = summarize_docs_prompt | llm | StrOutputParser()
+
+        for i, list_chunks in enumerate (chunks_for_summrize):
+
+            summrize_docs += f"""doc{i}:\n"""
+
+            for j, chunk in enumerate (list_chunks):
+        
+                summrize_docs += f"""chunk{j}:\n  {chain.invoke({ "chunk_to_summrize": chunk})}\n"""
+        
+            summrize_docs += f"""{"=="*15} END OF DOC{i} {"=="*15} \n"""
+
+        return {"context": summrize_docs}
+    
+    else: return {"context": full_docs}
 
 ############################################### Chain to answer User Question form docs "RAG" ###############################################
 def rag_answer_chain(state: AppState) -> AppState:
@@ -123,7 +127,7 @@ def rag_answer_chain(state: AppState) -> AppState:
     rag_answer = chain.invoke(
         {
             "question": state["question"],
-            "context": state["docs"],
+            "context": state["context"]
         }
     )
 
@@ -135,4 +139,3 @@ if __name__ == "__main__":
 
     state: AppState = {"question": "hello can i know what is sun"}
     print(classify_question(state))
-
