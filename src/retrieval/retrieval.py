@@ -186,6 +186,7 @@ def search_docs_hybrid(query):
 
 
 ############################################### Use retrived chunks celex to get full doc search to summrize it ################################################
+
 def get_full_docs_celex(celex_ids):
     docs_list: list[str] = []
     full_doc_info = """ """
