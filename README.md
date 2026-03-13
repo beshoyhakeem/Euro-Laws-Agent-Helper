@@ -15,6 +15,6 @@ pip install -r requirements.txt
 - to run the FastApi Page
 
 ```
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8080
 
 ```
