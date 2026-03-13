@@ -7,5 +7,4 @@ enc = tiktoken.encoding_for_model("gpt-4o")
 def count_tokens(text):
 
     tokens_count = len(enc.encode(text))
-
     return tokens_count
