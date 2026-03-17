@@ -98,7 +98,10 @@ Example outputs from the Euro Laws Assistant answering legal queries using EUR-L
 #
 
 ### 👤 Author
-**Beshoy Hakeem**  
-[LinkedIn](https://www.linkedin.com/in/beshoy-fahmy-14a254359/)  
-[GITHUB](https://github.com/beshoyhakeem)  
-Email: beshoyashraf042@gmail.com
+**Beshoy Hakeem**
+
+[![GitHub](https://img.shields.io/badge/GitHub-000?style=for-the-badge&logo=github)](https://github.com/beshoyhakeem)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/beshoy-fahmy-14a254359/)
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:beshoyashraf042@gmail.com)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/+201288733253)
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discordapp.com/users/bebo5018)
