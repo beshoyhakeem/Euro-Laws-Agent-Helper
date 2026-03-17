@@ -42,20 +42,24 @@ Euro-Laws-Agent-Helper
   ├── .gitignore
   └── README.md
   └── requirements.txt
-```      
+```        
 
 ### 📊 Results
 Example outputs from the Euro Laws Assistant answering legal queries using EUR-Lex documents:
 
 | RAG Results |  
 |--------------------------------|
-| ![](Inference/agreements_companies.png) |
-| ![](Inference/drug_chat.png) | 
+| ![](inference/agreements_companies.png) |
+| ![](inference/drug_chat.png) |
+
+#
 
 **Performance Metrics:**
 - Avg Retrieval Latency: ~1.0s  
 - Avg Routing Token Completion: ~0.2s  
 - Avg End-to-End Question Response Time: ~2.5s
+
+#
 
 ### How to Run
 
@@ -71,7 +75,6 @@ Example outputs from the Euro Laws Assistant answering legal queries using EUR-L
     cd Euro-Laws-Agent-Helper
 ```  
 
-
 3. **Install dependencies**
 
 ```bash
@@ -84,14 +87,15 @@ Example outputs from the Euro Laws Assistant answering legal queries using EUR-L
 ```bash
     uvicorn app.main:app --reload --port 8080
 
-```
-
+```  
+#
 
 ### Future Improvments
 1. **Automated Data Pipeline – Implement an automated pipeline to scrape EUR-Lex data, chunk documents, generate embeddings, and update the Weaviate vector database.**
 2. **Stronger Embeddings – Using a larger OpenAI embedding model to potentially improve retrieval quality.**
 3. **Specialized Local LLM – Train or fine-tune a domain-specific LLM with a larger context window using SentenceTransformers for secure local deployment.**
 
+#
 
 ### 👤 Author
 **Beshoy Hakeem**  
