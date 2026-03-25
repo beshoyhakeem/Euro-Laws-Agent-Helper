@@ -1,8 +1,8 @@
-weaviate-client[agents]
 tqdm
 numpy
 pandas
 sentence-transformers
+weaviate-client[agents]
 openai
 python-dotenv
 langchain
@@ -11,7 +11,6 @@ langchain-huggingface
 langchain-weaviate
 langchain-openai
 langgraph
-weaviate-client
 tiktoken
 fastapi
 uvicorn[standard]
